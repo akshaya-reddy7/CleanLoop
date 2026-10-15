@@ -35,6 +35,5 @@ target/
 
 ### Uploads directory ###
 uploads/
-.cleanloop-frontend/
 .cleanloop-frontend - Copy/
 cleanloop-frontend/node_modules/

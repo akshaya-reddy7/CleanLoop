@@ -3,9 +3,10 @@ import './Auth.css'
 
 function Register() {
   const [form, setForm] = useState({
-    name: '',
+    fullName: '',
     email: '',
     password: '',
+    phoneNumber: '',
   })
 
   const [message, setMessage] = useState('')
@@ -21,11 +22,14 @@ function Register() {
     setLoading(true)
 
     try {
-      const response = await fetch('https://cleanloop-ta4c.onrender.com/api/v1/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
+      const response = await fetch(
+        'https://cleanloop-ta4c.onrender.com/api/v1/auth/register',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        }
+      )
 
       const result = await response.json()
 
@@ -58,12 +62,12 @@ function Register() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Full name</label>
+          <label htmlFor="fullName">Full name</label>
           <input
-            id="name"
-            name="name"
+            id="fullName"
+            name="fullName"
             type="text"
-            value={form.name}
+            value={form.fullName}
             onChange={handleChange}
             placeholder="Your full name"
             autoComplete="name"
@@ -79,6 +83,18 @@ function Register() {
             onChange={handleChange}
             placeholder="you@example.com"
             autoComplete="email"
+            required
+          />
+
+          <label htmlFor="phoneNumber">Phone number</label>
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            type="tel"
+            value={form.phoneNumber}
+            onChange={handleChange}
+            placeholder="Your phone number"
+            autoComplete="tel"
             required
           />
 

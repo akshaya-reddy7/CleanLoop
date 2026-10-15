@@ -1,0 +1,40 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-launcher
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbproject/load-predictions.properties
+/nbproject/private/config.properties
+
+### VS Code ###
+.vscode/
+
+### Environment and Secrets ###
+.env
+*.env.local
+*.log
+
+### Uploads directory ###
+uploads/
+.cleanloop-frontend/
+.cleanloop-frontend - Copy/
+cleanloop-frontend/node_modules/

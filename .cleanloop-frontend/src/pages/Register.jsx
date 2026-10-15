@@ -23,7 +23,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        'https://cleanloop-ta4c.onrender.com/api/v1/auth/register',
+        'https://cleanloop-backend-ivty.onrender.com/api/v1/auth/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

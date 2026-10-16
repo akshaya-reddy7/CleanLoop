@@ -1,3 +1,4 @@
+
 package com.cleanloop.config;
 
 import com.cleanloop.security.JwtAuthenticationFilter;
@@ -46,7 +47,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
@@ -55,9 +57,29 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
+
+                        // Public frontend homepage and static assets
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/assets/**",
+                                "/favicon.ico",
+                                "/vite.svg",
+                                "/*.js",
+                                "/*.css",
+                                "/*.png",
+                                "/*.jpg",
+                                "/*.jpeg",
+                                "/*.svg",
+                                "/*.ico",
+                                "/login",
+                                "/register"
+                        ).permitAll()
+
+                        // Public authentication, health and API documentation
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/api/v1/health/**",
@@ -66,22 +88,34 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/actuator/**"
                         ).permitAll()
+
                         // Public read-only endpoints
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/eco-tips/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/schedules/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/recycling-centers/**").permitAll()
+
                         // Admin restricted endpoints
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+
                         // Authority and Service Provider endpoints
-                        .requestMatchers("/api/v1/dashboard/authority").hasAnyRole("AUTHORITY", "ADMIN")
-                        .requestMatchers("/api/v1/dashboard/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/dashboard/citizen").hasAnyRole("CITIZEN", "ADMIN")
-                        // All other endpoints require authentication
+                        .requestMatchers("/api/v1/dashboard/authority")
+                        .hasAnyRole("AUTHORITY", "ADMIN")
+
+                        .requestMatchers("/api/v1/dashboard/admin")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/v1/dashboard/citizen")
+                        .hasAnyRole("CITIZEN", "ADMIN")
+
+                        // All remaining endpoints require authentication
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
@@ -89,19 +123,24 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
                 .map(String::trim)
                 .toList();
 
         configuration.setAllowedOrigins(origins);
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(
+                List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }

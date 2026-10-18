@@ -26,10 +26,12 @@ function Login() {
         body: JSON.stringify(form),
       })
 
-      const result = await response.json()
+      const result = await response.json().catch(() => ({}))
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Login failed. Check your details.')
+        const validationError =
+          result.validationErrors && Object.values(result.validationErrors)[0]
+        throw new Error(validationError || result.message || 'Login failed. Check your details.')
       }
 
       const data = result.data

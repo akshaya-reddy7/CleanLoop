@@ -22,19 +22,18 @@ function Register() {
     setLoading(true)
 
     try {
-      const response = await fetch(
-        'https://cleanloop-backend-ivty.onrender.com/api/v1/auth/register',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(form),
-        }
-      )
+      const response = await fetch('/api/v1/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
 
-      const result = await response.json()
+      const result = await response.json().catch(() => ({}))
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Registration failed. Please try again.')
+        const validationError =
+          result.validationErrors && Object.values(result.validationErrors)[0]
+        throw new Error(validationError || result.message || 'Registration failed. Please try again.')
       }
 
       setMessage('Registration successful! You can now log in.')

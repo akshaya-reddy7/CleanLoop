@@ -136,7 +136,17 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard initialTab="overview" />} />
+        <Route path="/reports" element={<Dashboard initialTab="reports" />} />
+        <Route path="/pickups" element={<Dashboard initialTab="pickups" />} />
+        <Route path="/schedules" element={<Dashboard initialTab="schedules" />} />
+        <Route path="/recycling-centers" element={<Dashboard initialTab="recycling" />} />
+        <Route path="/ai-classifier" element={<Dashboard initialTab="ai" />} />
+        <Route path="/eco-tips" element={<Dashboard initialTab="ecotips" />} />
+        <Route path="/notifications" element={<Dashboard initialTab="notifications" />} />
+        <Route path="/profile" element={<Dashboard initialTab="profile" />} />
+        <Route path="/authority" element={<Dashboard initialTab="authority" />} />
+        <Route path="/admin" element={<Dashboard initialTab="admin" />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>

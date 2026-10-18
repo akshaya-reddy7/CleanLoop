@@ -76,7 +76,19 @@ public class SecurityConfig {
                                 "/*.svg",
                                 "/*.ico",
                                 "/login",
-                                "/register"
+                                "/register",
+                                "/dashboard",
+                                "/reports",
+                                "/pickups",
+                                "/schedules",
+                                "/recycling-centers",
+                                "/admin-portal",
+                                "/admin",
+                                "/authority",
+                                "/profile",
+                                "/ai-classifier",
+                                "/eco-tips",
+                                "/notifications"
                         ).permitAll()
 
                         // Public authentication, health and API documentation
@@ -124,11 +136,19 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim)
-                .toList();
+        java.util.List<String> originPatterns = new java.util.ArrayList<>(java.util.List.of(
+                "http://localhost:*",
+                "https://*.vercel.app",
+                "https://*.onrender.com"
+        ));
+        for (String origin : allowedOrigins.split(",")) {
+            String trimmed = origin.trim();
+            if (!trimmed.isEmpty() && !originPatterns.contains(trimmed)) {
+                originPatterns.add(trimmed);
+            }
+        }
 
-        configuration.setAllowedOrigins(origins);
+        configuration.setAllowedOriginPatterns(originPatterns);
         configuration.setAllowedMethods(
                 List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(

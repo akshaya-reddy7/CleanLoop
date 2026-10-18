@@ -14,7 +14,14 @@ function Login() {
 
   useEffect(() => {
     if (localStorage.getItem('cleanloop_access_token')) {
-      navigate('/dashboard')
+      const role = localStorage.getItem('cleanloop_user_role')
+      if (role === 'ADMIN') {
+        navigate('/admin')
+      } else if (role === 'AUTHORITY') {
+        navigate('/authority')
+      } else {
+        navigate('/dashboard')
+      }
     }
   }, [navigate])
 
@@ -64,8 +71,18 @@ function Login() {
         localStorage.setItem('cleanloop_user_email', data.email)
       }
 
-      setMessage('Login successful! Redirecting to dashboard...')
-      navigate('/dashboard')
+      if (data?.role) {
+        localStorage.setItem('cleanloop_user_role', data.role)
+      }
+
+      setMessage('Login successful! Redirecting...')
+      if (data?.role === 'ADMIN') {
+        navigate('/admin')
+      } else if (data?.role === 'AUTHORITY') {
+        navigate('/authority')
+      } else {
+        navigate('/dashboard')
+      }
     } catch (error) {
       setMessage(
         error.message === 'Failed to fetch'

@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
 
 function Home() {
   const navigate = useNavigate()
@@ -19,8 +20,14 @@ function Home() {
           <a href="#impact">Our Impact</a>
         </div>
         <div className="nav-actions">
-          <button className="login-btn" onClick={() => navigate('/login')}>Log In</button>
-          <button className="primary-btn" onClick={() => navigate('/register')}>Get Started ↗</button>
+          {localStorage.getItem('cleanloop_access_token') ? (
+            <button className="primary-btn" onClick={() => navigate('/dashboard')}>Dashboard ↗</button>
+          ) : (
+            <>
+              <button className="login-btn" onClick={() => navigate('/login')}>Log In</button>
+              <button className="primary-btn" onClick={() => navigate('/register')}>Get Started ↗</button>
+            </>
+          )}
         </div>
       </nav>
 
@@ -129,6 +136,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>

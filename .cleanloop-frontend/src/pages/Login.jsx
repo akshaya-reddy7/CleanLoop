@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Auth.css'
 
 function Login() {
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -9,6 +11,12 @@ function Login() {
 
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (localStorage.getItem('cleanloop_access_token')) {
+      navigate('/dashboard')
+    }
+  }, [navigate])
 
   function handleChange(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
@@ -48,7 +56,16 @@ function Login() {
         localStorage.setItem('cleanloop_refresh_token', refreshToken)
       }
 
-      setMessage('Login successful! Your session is ready.')
+      if (data?.fullName) {
+        localStorage.setItem('cleanloop_user_name', data.fullName)
+      }
+
+      if (data?.email) {
+        localStorage.setItem('cleanloop_user_email', data.email)
+      }
+
+      setMessage('Login successful! Redirecting to dashboard...')
+      navigate('/dashboard')
     } catch (error) {
       setMessage(
         error.message === 'Failed to fetch'
